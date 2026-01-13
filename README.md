@@ -4,6 +4,10 @@ This repository implements a **Hierarchical Reinforcement Learning (HRL)** frame
 
 ## System Overview
 
+
+https://github.com/user-attachments/assets/ab80304e-8c2d-445c-9b80-c6889a5f652a
+
+
 The framework consists of two main levels:
 
 1.  **Low-Level Skills (The "Body")**:
@@ -74,3 +78,4 @@ python scripts/train_walker.py --gui
 
 ## License
 MIT
+
