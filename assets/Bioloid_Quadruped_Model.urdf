@@ -1,0 +1,230 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot name="Bioloid_Quadruped_Model">
+    <link name="base_link">
+        <inertial>
+            <origin xyz="3.217737512478091e-07 -0.0006208967582803453 -0.02167933173791836" rpy="0.0 0.0 0.0" />
+            <mass value="0.3945572703862656" />
+            <inertia ixx="0.0008062948648380765" iyy="0.0004776395944418309" izz="0.00114506488469596" ixy="-2.7497490553469346e-08" iyz="-3.2439569827517864e-07" ixz="-3.097941264168277e-10" />
+        </inertial>
+        <visual name="base_link_visual">
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+            <geometry>
+                <mesh filename="meshes/base_link.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </visual>
+        <collision name="base_link_collision">
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+            <geometry>
+                <mesh filename="meshes/base_link.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+    </link>
+    <link name="FR_Hip">
+        <inertial>
+            <origin xyz="-0.018668157324061036 0.022973185419977744 0.018666612511943532" rpy="0.0 -0.0 0.0" />
+            <mass value="0.04253689044965901" />
+            <inertia ixx="1.8169615618694648e-05" iyy="1.8136930768790157e-05" izz="1.816943908045572e-05" ixy="1.220731168130027e-06" iyz="-1.2208608291347044e-06" ixz="9.283634929247045e-08" />
+        </inertial>
+        <visual name="FR_Hip_visual">
+            <origin xyz="4.4444448121794266e-14 -3.9968028886505636e-16 3.219646771412954e-14" rpy="1.5707963267949003 -4.6115879164695115e-29 8.6926450496864e-15" />
+            <geometry>
+                <mesh filename="meshes/FR_Hip.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </visual>
+        <collision name="FR_Hip_collision">
+            <origin xyz="4.4444448121794266e-14 -3.9968028886505636e-16 3.219646771412954e-14" rpy="1.5707963267949003 -4.6115879164695115e-29 8.6926450496864e-15" />
+            <geometry>
+                <mesh filename="meshes/FR_Hip.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+    </link>
+    <link name="FL_Hip">
+        <inertial>
+            <origin xyz="-0.018666612512926336 0.02297318542160572 -0.018668157324469394" rpy="0.0 -0.0 0.0" />
+            <mass value="0.042536890445288286" />
+            <inertia ixx="1.8169439080177526e-05" iyy="1.8136930767766182e-05" izz="1.8169615615768562e-05" ixy="1.2208608287358468e-06" iyz="1.2207311675215232e-06" ixz="-9.283634903110881e-08" />
+        </inertial>
+        <visual name="FL_Hip_visual">
+            <origin xyz="4.575007039875345e-14 -1.7763568394002505e-17 3.507416579395795e-14" rpy="1.5707963267948768 5.604829633550335e-31 9.447140176785709e-17" />
+            <geometry>
+                <mesh filename="meshes/FL_Hip.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </visual>
+        <collision name="FL_Hip_collision">
+            <origin xyz="4.575007039875345e-14 -1.7763568394002505e-17 3.507416579395795e-14" rpy="1.5707963267948768 5.604829633550335e-31 9.447140176785709e-17" />
+            <geometry>
+                <mesh filename="meshes/FL_Hip.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+    </link>
+    <link name="BR_Hip">
+        <inertial>
+            <origin xyz="0.01866661251301758 0.02297318542160571 0.018668157324536024" rpy="0.0 -0.0 0.0" />
+            <mass value="0.04253689044528844" />
+            <inertia ixx="1.8169439080177173e-05" iyy="1.8136930767766108e-05" izz="1.8169615615768555e-05" ixy="-1.220860828735712e-06" iyz="-1.2207311675213527e-06" ixz="-9.283634903084627e-08" />
+        </inertial>
+        <visual name="BR_Hip_visual">
+            <origin xyz="4.311218049224408e-14 1.865174681370263e-16 3.595346242946107e-14" rpy="-1.5707963267948934 1.1774227769444482e-60 -3.141592653589793" />
+            <geometry>
+                <mesh filename="meshes/BR_Hip.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </visual>
+        <collision name="BR_Hip_collision">
+            <origin xyz="4.311218049224408e-14 1.865174681370263e-16 3.595346242946107e-14" rpy="-1.5707963267948934 1.1774227769444482e-60 -3.141592653589793" />
+            <geometry>
+                <mesh filename="meshes/BR_Hip.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+    </link>
+    <link name="BL_Hip">
+        <inertial>
+            <origin xyz="0.018668157324152192 0.022973185419977935 -0.0186666125118764" rpy="0.0 -0.0 0.0" />
+            <mass value="0.042536890449659026" />
+            <inertia ixx="1.8169615618694837e-05" iyy="1.8136930768790306e-05" izz="1.8169439080455915e-05" ixy="-1.220731168130068e-06" iyz="1.2208608291346652e-06" ixz="9.283634929218553e-08" />
+        </inertial>
+        <visual name="BL_Hip_visual">
+            <origin xyz="4.68070027181966e-14 -4.174438572590589e-16 3.459454944731988e-14" rpy="-1.570796326794897 7.161843189399387e-30 3.1415926535897847" />
+            <geometry>
+                <mesh filename="meshes/BL_Hip.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </visual>
+        <collision name="BL_Hip_collision">
+            <origin xyz="4.68070027181966e-14 -4.174438572590589e-16 3.459454944731988e-14" rpy="-1.570796326794897 7.161843189399387e-30 3.1415926535897847" />
+            <geometry>
+                <mesh filename="meshes/BL_Hip.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+    </link>
+    <link name="FR_Leg">
+        <inertial>
+            <origin xyz="-0.0247308162490421 -0.015277990613796923 -0.0057880069808526535" rpy="0.0 -1.6422226838308199e-28 1.5777218104420236e-30" />
+            <mass value="0.07210855947361666" />
+            <inertia ixx="2.7116764834131184e-05" iyy="3.7585354293326055e-05" izz="2.2755853150201203e-05" ixy="-3.355322684653534e-06" iyz="-1.1991990578717728e-06" ixz="-1.2788645590324733e-05" />
+        </inertial>
+        <visual name="FR_Leg_visual">
+            <origin xyz="3.3113903530335163e-09 1.2674441940419e-10 -3.311390059934638e-09" rpy="2.3561944901923417 0.7853981633974431 3.1415926535897767" />
+            <geometry>
+                <mesh filename="meshes/FR_Leg.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </visual>
+        <collision name="FR_Leg_collision">
+            <origin xyz="3.3113903530335163e-09 1.2674441940419e-10 -3.311390059934638e-09" rpy="2.3561944901923417 0.7853981633974431 3.1415926535897767" />
+            <geometry>
+                <mesh filename="meshes/FR_Leg.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+    </link>
+    <link name="FL_Leg">
+        <inertial>
+            <origin xyz="0.0057859373906217915 -0.015275063771119335 0.024732885839324148" rpy="0.0 -5.595214155379179e-29 0.0" />
+            <mass value="0.07210855947369664" />
+            <inertia ixx="2.2759486563865445e-05" iyy="3.758624139430155e-05" izz="2.7113831815778427e-05" ixy="1.1971581058590036e-06" iyz="3.3527204680457515e-06" ixz="-1.2788202039874856e-05" />
+        </inertial>
+        <visual name="FL_Leg_visual">
+            <origin xyz="3.311389562554723e-09 1.2681151240201417e-10 -3.3113893049829814e-09" rpy="-2.3561944901923213 -0.7853981633974557 -2.1005088792167953e-14" />
+            <geometry>
+                <mesh filename="meshes/FL_Leg.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </visual>
+        <collision name="FL_Leg_collision">
+            <origin xyz="3.311389562554723e-09 1.2681151240201417e-10 -3.3113893049829814e-09" rpy="-2.3561944901923213 -0.7853981633974557 -2.1005088792167953e-14" />
+            <geometry>
+                <mesh filename="meshes/FL_Leg.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+    </link>
+    <link name="BR_Leg">
+        <inertial>
+            <origin xyz="0.02473288583925933 0.01527506377118618 0.00578593739068638" rpy="0.0 -3.7795432499907104e-29 0.0" />
+            <mass value="0.07210855947369653" />
+            <inertia ixx="2.7113831815778058e-05" iyy="3.758624139430048e-05" izz="2.2759486563864066e-05" ixy="-3.3527204680459463e-06" iyz="-1.1971581058589392e-06" ixz="-1.2788202039874592e-05" />
+        </inertial>
+        <visual name="BR_Leg_visual">
+            <origin xyz="-3.311453751209115e-09 -1.2674482796626307e-10 3.3114538933176617e-09" rpy="0.7853981633974368 -0.7853981633974538 2.4463814547562022e-14" />
+            <geometry>
+                <mesh filename="meshes/BR_Leg.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </visual>
+        <collision name="BR_Leg_collision">
+            <origin xyz="-3.311453751209115e-09 -1.2674482796626307e-10 3.3114538933176617e-09" rpy="0.7853981633974368 -0.7853981633974538 2.4463814547562022e-14" />
+            <geometry>
+                <mesh filename="meshes/BR_Leg.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+    </link>
+    <link name="BL_Leg">
+        <inertial>
+            <origin xyz="-0.026060512790645165 0.013397515730857243 0.00445831043930073" rpy="0.0 1.124620163179249e-28 0.0" />
+            <mass value="0.0721085594736969" />
+            <inertia ixx="2.1650099278941074e-05" iyy="3.7724861229696696e-05" izz="2.8084599265307002e-05" ixy="-4.6171234653434635e-07" iyz="2.6172747087214727e-06" ixz="1.2718892122177328e-05" />
+        </inertial>
+        <visual name="BL_Leg_visual">
+            <origin xyz="8.961250408390243e-11 -4.683023426821364e-09 8.961213104896616e-11" rpy="-0.7853981633974587 -0.7853981633974421 -3.141592653589766" />
+            <geometry>
+                <mesh filename="meshes/BL_Leg.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </visual>
+        <collision name="BL_Leg_collision">
+            <origin xyz="8.961250408390243e-11 -4.683023426821364e-09 8.961213104896616e-11" rpy="-0.7853981633974587 -0.7853981633974421 -3.141592653589766" />
+            <geometry>
+                <mesh filename="meshes/BL_Leg.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+    </link>
+    <joint name="base_link_FR_Hip_Joint" type="revolute">
+        <origin xyz="0.04650000000004563 -0.05199999999996651 -0.000999999999999952" rpy="-1.5707963267949003 -2.472056497036426e-31 3.141592653589793" />
+        <parent link="base_link" />
+        <child link="FR_Hip" />
+        <axis xyz="-0.0 1.0 5.849663054843777e-15" />
+        <limit lower="-1.570796" upper="0.872665" effort="1000000" velocity="1000000" />
+    </joint>
+    <joint name="base_link_FL_Hip_Joint" type="revolute">
+        <origin xyz="0.04650000000004563 0.0520000000000335 -0.001000000000000183" rpy="-1.5707963267948883 -2.472056497036426e-31 3.141592653589793" />
+        <parent link="base_link" />
+        <child link="FL_Hip" />
+        <axis xyz="0.0 1.0 -5.932832083219199e-15" />
+        <limit lower="-0.872665" upper="1.570796" effort="1000000" velocity="1000000" />
+    </joint>
+    <joint name="base_link_BR_Hip_Joint" type="revolute">
+        <origin xyz="-0.046499999999954376 -0.05199999999996651 -0.000999999999999952" rpy="-1.5707963267948912 -2.472056497036426e-31 3.141592653589793" />
+        <parent link="base_link" />
+        <child link="BR_Hip" />
+        <axis xyz="0.0 1.0 -3.0632783374918904e-15" />
+        <limit lower="-0.872665" upper="1.570796" effort="1000000" velocity="1000000" />
+    </joint>
+    <joint name="base_link_BL_Hip_Joint" type="revolute">
+        <origin xyz="-0.046499999999954376 0.0520000000000335 -0.001000000000000183" rpy="-1.570796326794893 -2.472056497036426e-31 3.141592653589793" />
+        <parent link="base_link" />
+        <child link="BL_Hip" />
+        <axis xyz="0.0 1.0 -1.3683992102213572e-15" />
+        <limit lower="-1.570796" upper="0.872665" effort="1000000" velocity="1000000" />
+    </joint>
+    <joint name="FR_Hip_FR_Leg_Joint" type="revolute">
+        <origin xyz="-0.04949747000000013 0.035499999999999886 0.0197989900000002" rpy="-1.5707963267949137 1.6951260072622784e-14 -2.3561944901923386" />
+        <parent link="FR_Hip" />
+        <child link="FR_Leg" />
+        <axis xyz="-0.5000001547244821 -0.707107 0.5000001547244701" />
+        <limit lower="0.0" upper="1.570796" effort="1000000" velocity="1000000" />
+    </joint>
+    <joint name="FL_Hip_FL_Leg_Joint" type="revolute">
+        <origin xyz="-0.04949747000000006 0.035499999999999886 -0.01979899000000021" rpy="1.5707963267948932 -3.284970615432205e-15 2.356194490192351" />
+        <parent link="FL_Hip" />
+        <child link="FL_Leg" />
+        <axis xyz="-0.5000001547244846 -0.707107 0.5000001547244677" />
+        <limit lower="-1.570796" upper="0.0" effort="1000000" velocity="1000000" />
+    </joint>
+    <joint name="BR_Hip_BR_Leg_Joint" type="revolute">
+        <origin xyz="0.04949746999999996 0.03550000000000006 0.01979898999999989" rpy="1.570796326794905 8.313863881483637e-15 2.3561944901923506" />
+        <parent link="BR_Hip" />
+        <child link="BR_Leg" />
+        <axis xyz="0.5000001547244746 0.707107 -0.5000001547244777" />
+        <limit lower="-1.570796" upper="0.0" effort="1000000" velocity="1000000" />
+    </joint>
+    <joint name="BL_Hip_BL_Leg_Joint" type="revolute">
+        <origin xyz="0.019798989999999687 0.035499999999999934 -0.04949747000000004" rpy="1.570796326794887 9.637206637771678e-15 -2.356194490192339" />
+        <parent link="BL_Hip" />
+        <child link="BL_Leg" />
+        <axis xyz="-0.5000001547244807 0.707107 -0.5000001547244715" />
+        <limit lower="-1.570796" upper="0.0" effort="1000000" velocity="1000000" />
+    </joint>
+</robot>
