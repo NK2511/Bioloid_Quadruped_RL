@@ -2,11 +2,13 @@
 
 This repository implements a **Hierarchical Reinforcement Learning (HRL)** framework for a Bioloid quadruped robot using PyBullet and PyTorch. It is designed to demonstrate how low-level motor skills can be composed to achieve complex high-level navigation tasks.
 
+## Media
+
+<img width="828" height="635" alt="Screenshot 2025-09-22 220335" src="https://github.com/user-attachments/assets/f028cb7f-0524-4230-aafe-e4cc95ab71fa" />
+https://github.com/user-attachments/assets/28658172-1d26-478a-8d5b-c946233ce1be
+
+
 ## System Overview
-
-
-https://github.com/user-attachments/assets/ab80304e-8c2d-445c-9b80-c6889a5f652a
-
 
 The framework consists of two main levels:
 
@@ -78,4 +80,5 @@ python scripts/train_walker.py --gui
 
 ## License
 MIT
+
 
