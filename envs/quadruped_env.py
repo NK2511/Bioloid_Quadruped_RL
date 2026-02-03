@@ -1,6 +1,4 @@
-import math
 from typing import Optional, Tuple, Dict, Any, List
-
 import gymnasium as gym
 import numpy as np
 import pybullet as p
@@ -10,6 +8,7 @@ from gymnasium import spaces
 
 class BioloidAntLikeEnv(gym.Env):
     """
+    
     Ant-like PyBullet environment for an 8-DoF quadruped (Bioloid model).
 
     Key design choices to mimic AntBulletEnv behavior:
@@ -32,15 +31,15 @@ class BioloidAntLikeEnv(gym.Env):
         render_mode: str = "DIRECT",
         frame_skip: int = 4,
         time_step: float = 1.0 / 240.0,
-        # Physical robot parameters (from user):
-        body_height_m: float = 0.119,          # base height from ground at neutral
-        hip_link_length_m: float = 0.05945,    # in XY plane
-        leg_link_length_m: float = 0.0815,     # downward link length
-        total_mass_kg: float = 0.85,           # total mass target
-        # Control/reward weights tuned for a smaller robot:
-        torque_limit: Optional[float] = None,  # if None, computed from mass & leg length
-        ctrl_cost_weight: float = 0.03,        # slightly smaller than Ant default
-        contact_cost_weight: float = 2e-4,     # scaled for ~0.85kg
+
+        body_height_m: float = 0.119,          
+        hip_link_length_m: float = 0.05945,    
+        leg_link_length_m: float = 0.0815,     
+        total_mass_kg: float = 0.85,           
+
+        torque_limit: Optional[float] = None,  
+        ctrl_cost_weight: float = 0.03,       
+        contact_cost_weight: float = 2e-4,     
         alive_bonus: float = 0.05,
         max_steps: int = 1000,
     ) -> None:
@@ -65,17 +64,16 @@ class BioloidAntLikeEnv(gym.Env):
         p.setGravity(0, 0, -9.81)
         p.setTimeStep(time_step)
 
-        # Simulation params
+
         self.frame_skip = int(frame_skip)
         self.time_step = float(time_step)
-        # If torque_limit not provided, compute a conservative default based on size/mass
-        self.torque_limit = float(torque_limit) if torque_limit is not None else self._compute_default_torque_limit(self.total_mass_kg, self.leg_link_length_m)
+        self.torque_limit = 0.255 
         self.ctrl_cost_weight = float(ctrl_cost_weight)
         self.contact_cost_weight = float(contact_cost_weight)
         self.alive_bonus = float(alive_bonus)
         self.max_steps = int(max_steps)
 
-        # Joint and foot names (override if your URDF differs)
+
         self.joint_names: List[str] = [
             'base_link_FR_Hip_Joint', 'FR_Hip_FR_Leg_Joint',
             'base_link_FL_Hip_Joint', 'FL_Hip_FL_Leg_Joint',
@@ -96,19 +94,17 @@ class BioloidAntLikeEnv(gym.Env):
             low=-1.0, high=1.0, shape=(len(self.joint_names),), dtype=np.float32
         )
 
-        # We'll build a 28-dim observation similar in spirit to AntBulletEnv:
+
         # [joint_pos(8), joint_vel(8), base_lin_vel(3), base_ang_vel(3), base_quat(4), base_height(1), feet_on_ground_ratio(1)] = 28
         obs_dim = 8 + 8 + 3 + 3 + 4 + 1 + 1
         self.observation_space = spaces.Box(
             low=-np.inf, high=np.inf, shape=(obs_dim,), dtype=np.float32
         )
 
-        # Episode state
+    
         self.step_count = 0
         self.prev_base_x = 0.0
         self.np_random = np.random.RandomState()
-
-        # Do initial reset to populate indices and state
         self.reset()
 
     # ----------------------------- Gymnasium API -----------------------------
@@ -324,13 +320,13 @@ class BioloidAntLikeEnv(gym.Env):
         return float(in_contact) / float(len(self.foot_link_indices))
 
     def _sum_contact_forces(self) -> float:
-        # Approximate contact cost from normal forces between robot links and plane or other bodies
+        
         total = 0.0
-        # With plane
+        
         cps = p.getContactPoints(bodyA=self.robot_id, bodyB=self.plane_id, physicsClientId=self.client_id)
         for cp in cps:
-            total += abs(cp[9])  # normal force
-        # With any other bodies (rare here), loop over links for robustness
+            total += abs(cp[9]) 
+       
         num_bodies = p.getNumBodies(physicsClientId=self.client_id)
         for b in range(num_bodies):
             if b in (self.robot_id, self.plane_id):
@@ -343,7 +339,7 @@ class BioloidAntLikeEnv(gym.Env):
     def _rescale_total_mass(self, target_mass: float) -> None:
         """Rescales all link masses to match target total mass while preserving ratios."""
         num_joints = p.getNumJoints(self.robot_id, physicsClientId=self.client_id)
-        # Collect current masses including base (-1)
+        
         indices = [-1] + list(range(num_joints))
         masses = []
         for idx in indices:
@@ -359,18 +355,9 @@ class BioloidAntLikeEnv(gym.Env):
             except Exception:
                 pass
 
-    def _compute_default_torque_limit(self, total_mass_kg: float, leg_length_m: float) -> float:
-        """Heuristic torque limit per joint based on size/mass.
-        Rough estimate: torque per leg to hold body ~ (m*g*leg_length)/4. Multiply by a margin for agility.
-        """
-        g = 9.81
-        per_leg = (total_mass_kg * g * max(leg_length_m, 1e-3)) / 4.0
-        margin = 3.0  # allow stronger torques than static hold
-        per_joint = per_leg * margin * 0.5  # distribute between two joints per leg
-        return float(max(0.2, min(2.5, per_joint)))
 
 
-# Optional: simple self-test when run as a script
+
 if __name__ == "__main__":
     env = BioloidAntLikeEnv(render_mode="GUI")
     obs, info = env.reset()
