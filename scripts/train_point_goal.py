@@ -12,13 +12,13 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(PROJECT_ROOT)
 
 from envs.point_goal_env import BioloidEnvPointGoal
-from sac.sac_agent_discrete import SACDiscreteAgent # Use the new discrete agent
+from sac.sac_agent_discrete import SACDiscreteAgent 
 from sac.replay_memory import ReplayMemory
 
 def save_checkpoint(agent, directory: str, episode: int, total_steps: int, updates: int):
     """Saves a checkpoint for the point-goal agent."""
     os.makedirs(directory, exist_ok=True)
-    # Note: This is simplified as the discrete agent doesn't have auto alpha tuning
+
     ckpt = {
         "policy": agent.policy.state_dict(),
         "critic": agent.critic.state_dict(),
@@ -128,7 +128,6 @@ def main():
             done = bool(terminated or truncated)
 
             # --- Store Experience ---
-            # We store the high-level (state, action, reward, next_state) tuple
             mask = 0.0 if terminated else 1.0
             memory.push(state, action, reward, next_state, mask)
 
@@ -137,13 +136,12 @@ def main():
                 agent.update_parameters(memory, args.batch_size, updates)
                 updates += 1
 
-            # --- Housekeeping ---
             state = next_state
             episode_reward += float(reward)
             episode_steps += 1
             total_numsteps += 1
 
-        # --- End of Episode Logging ---
+
         scores_deque.append(episode_reward)
         avg_score = np.mean(scores_deque)
         writer.add_scalar("train/episode_return", episode_reward, i_episode)
@@ -172,4 +170,5 @@ def main():
 
 
 if __name__ == "__main__":
+
     main()
