@@ -10,9 +10,7 @@ from gymnasium import spaces
 
 class BioloidAntLikeEnvTurnOnly(gym.Env):
     """
-    A specialized environment to train a robot to turn RIGHT in place from a standing start.
-    The agent's goal is to achieve a positive angular velocity (clockwise/right turn)
-    while minimizing translational movement and staying upright.
+    A specialized environment to train a robot to turn RIGHT in place.
     """
 
     metadata = {"render_modes": ["GUI", "DIRECT"]}
@@ -23,19 +21,17 @@ class BioloidAntLikeEnvTurnOnly(gym.Env):
         render_mode: str = "DIRECT",
         frame_skip: int = 4,
         time_step: float = 1.0 / 240.0,
-        # Physical parameters to compute a realistic torque
+
         body_height_m: float = 0.119,
         total_mass_kg: float = 0.85,
         leg_link_length_m: float = 0.0815,
-        torque_limit: Optional[float] = None, # If None, computed from mass & leg length
         max_steps: int = 500,
-        # --- Reward Weights ---
         w_turn_velocity: float = 1.5,
         w_movement: float = 0.1,
         w_height: float = 0.8,
         w_home: float = 0.3,
-        w_joint_pose: float = 0.05, # New: Penalty for non-neutral joint positions
-        w_tilt: float = 0.5, # New: Penalty for body roll/pitch
+        w_joint_pose: float = 0.05,
+        w_tilt: float = 0.5,
     ) -> None:
         super().__init__()
 
@@ -55,8 +51,7 @@ class BioloidAntLikeEnvTurnOnly(gym.Env):
 
         self.frame_skip = int(frame_skip)
         self.time_step = float(time_step)
-        # Use computed torque if not provided, for consistency with other envs
-        self.torque_limit = float(torque_limit) if torque_limit is not None else self._compute_default_torque_limit()
+        self.torque_limit = 0.255
         self.max_steps = int(max_steps)
 
         # Store reward weights
@@ -106,7 +101,6 @@ class BioloidAntLikeEnvTurnOnly(gym.Env):
                 self.joint_indices.append(name_to_joint_index[name])
         
         # --- Set Hard Joint Limits ---
-        # This physically prevents the joints from moving beyond the specified angle.
         foot_joint_limit_rad = np.deg2rad(15.0)
         for j in self.joint_indices:
             joint_info = p.getJointInfo(self.robot_id, j, physicsClientId=self.client_id)
@@ -139,10 +133,7 @@ class BioloidAntLikeEnvTurnOnly(gym.Env):
         base_pos, base_quat = p.getBasePositionAndOrientation(self.robot_id, physicsClientId=self.client_id)
         lin_vel, ang_vel = p.getBaseVelocity(self.robot_id, physicsClientId=self.client_id)
 
-        # --- Custom Reward for Turning in Place ---
-        # Simple, direct reward for turning RIGHT/clockwise (positive angular z-velocity)
-        # CAPPED to prevent rewarding extreme, unstable velocities.
-        max_rewardable_speed = 2.5  # rad/s, a reasonable but fast turning speed
+        max_rewardable_speed = 2.5
         turn_reward = np.clip(-ang_vel[2], -np.inf, max_rewardable_speed)
 
         # Penalties for stability and staying in place
@@ -150,12 +141,12 @@ class BioloidAntLikeEnvTurnOnly(gym.Env):
         height_penalty = (base_pos[2] - self.body_height_m)**2 # Penalize deviation from target height
         home_penalty = np.linalg.norm(base_pos[0:2])
 
-        # New: Penalize joints for being far from the neutral (zero) position
+
         joint_states = p.getJointStates(self.robot_id, self.joint_indices, physicsClientId=self.client_id)
         joint_pos = np.array([state[0] for state in joint_states])
         joint_pose_penalty = np.sum(np.square(joint_pos))
         
-        # New: Penalize for body tilting (roll and pitch)
+
         roll, pitch, _ = p.getEulerFromQuaternion(base_quat)
         tilt_penalty = roll**2 + pitch**2
 
@@ -218,13 +209,3 @@ class BioloidAntLikeEnvTurnOnly(gym.Env):
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
         return self.reset()
 
-    def _compute_default_torque_limit(self) -> float:
-        """
-        Heuristic torque limit per joint, consistent with other environments.
-        """
-        g = 9.81
-        per_leg = (self.total_mass_kg * g * max(self.leg_link_length_m, 1e-3)) / 4.0
-        margin = 3.0  # allow stronger torques than static hold
-        per_joint = per_leg * margin * 0.5  # distribute between two joints per leg
-        torque = float(max(0.2, min(2.5, per_joint)))
-        return torque
