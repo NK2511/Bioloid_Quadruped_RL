@@ -11,7 +11,7 @@ import pybullet as p
 import pybullet_data
 from gymnasium import spaces
 
-# Add the project root directory to the Python path to allow imports from sibling directories.
+
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(PROJECT_ROOT)
 
@@ -20,7 +20,7 @@ from sac.sac_agent import soft_actor_critic_agent
 
 
 def load_expert_agent(model_path: str, env, device: torch.device) -> soft_actor_critic_agent:
-    """Helper to load a pre-trained continuous-action agent."""
+
     if not model_path:
         raise ValueError(f"Model path cannot be empty for expert agent.")
     try:
@@ -43,7 +43,7 @@ def load_expert_agent(model_path: str, env, device: torch.device) -> soft_actor_
 
 
 def transform_observation_for_expert(obs: np.ndarray, base_quat_world: list) -> np.ndarray:
-    """Transforms world-frame observations for the expert walker agent."""
+
     _, _, yaw = p.getEulerFromQuaternion(base_quat_world)
     inverse_yaw_quat = p.getQuaternionFromEuler([0, 0, -yaw])
     world_ang_vel = obs[19:22]
@@ -173,9 +173,7 @@ class BioloidEnvPointGoal(gym.Env):
         is_turning = (command == NavigationCommands.TURN_LEFT or command == NavigationCommands.TURN_RIGHT)
         self._set_turn_mode_physics(is_turning)
 
-        # --- CRITICAL FIX: Stabilize Turning ---
-        # Temporarily disable the forward velocity target during turns to get a pure rotation.
-        # This makes the turn angle much more consistent and predictable.
+
         original_target_velocity = self.base_env.target_velocity
         if is_turning:
             self.base_env.target_velocity = 0.0
@@ -251,7 +249,7 @@ class BioloidEnvPointGoal(gym.Env):
         return point_goal_obs, float(reward), bool(terminated), bool(truncated), info
 
     def _get_raw_goal_metrics(self) -> Tuple[float, float]:
-        """Helper to compute the raw (un-normalized) distance and angle to the goal."""
+
         base_pos, base_quat = p.getBasePositionAndOrientation(self.base_env.robot_id, physicsClientId=self.client_id)
         base_pos_xy = np.array(base_pos[:2])
 
@@ -269,10 +267,7 @@ class BioloidEnvPointGoal(gym.Env):
         return dist_to_goal, angle_to_goal
 
     def _get_point_goal_observation(self) -> np.ndarray:
-        """
-        Constructs the observation for the high-level agent.
-        [dist_to_goal, angle_to_goal] + [proprioceptive_state(28)]
-        """
+
         # Get raw metrics first
         dist_to_goal, angle_to_goal = self._get_raw_goal_metrics()
 
@@ -308,7 +303,7 @@ class BioloidEnvPointGoal(gym.Env):
         self.base_env.close()
 
     def enable_gui(self, enable: bool = True) -> Tuple[np.ndarray, Dict[str, Any]]:
-        """Toggles GUI on/off by recreating the underlying environment."""
+
         current_render_mode = self.base_env.render_mode
         desired_mode = "GUI" if enable else "DIRECT"
         if current_render_mode == desired_mode:
@@ -332,7 +327,7 @@ class BioloidEnvPointGoal(gym.Env):
 
 
 if __name__ == "__main__":
-    # --- Simple test to see the environment in action ---
+
     env = BioloidEnvPointGoal(render_mode="GUI")
     obs, info = env.reset()
     print("Point-Goal Observation dim:", obs.shape)
