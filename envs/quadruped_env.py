@@ -28,7 +28,7 @@ class BioloidAntLikeEnv(gym.Env):
 
     def __init__(
         self,
-        urdf_path: str = r"assets\Bioloid_Quadruped_Model.urdf",
+        urdf_path: str = r"C:\\Users\\nandh\\Downloads\\Bioloid_Quadruped_Model\\Bioloid_Quadruped_Model.urdf",
         render_mode: str = "DIRECT",
         frame_skip: int = 4,
         time_step: float = 1.0 / 240.0,
@@ -39,10 +39,8 @@ class BioloidAntLikeEnv(gym.Env):
         total_mass_kg: float = 0.85,           # total mass target
         # Control/reward weights tuned for a smaller robot:
         torque_limit: Optional[float] = None,  # if None, computed from mass & leg length
-        target_velocity: float = 0.2,          # Target forward velocity (m/s) for a "basic walk"
-        ctrl_cost_weight: float = 0.05,        # Increased to promote smoother actions
+        ctrl_cost_weight: float = 0.03,        # slightly smaller than Ant default
         contact_cost_weight: float = 2e-4,     # scaled for ~0.85kg
-        straight_cost_weight: float = 0.1,     # Penalty for lateral/yaw movement
         alive_bonus: float = 0.05,
         max_steps: int = 1000,
     ) -> None:
@@ -72,10 +70,8 @@ class BioloidAntLikeEnv(gym.Env):
         self.time_step = float(time_step)
         # If torque_limit not provided, compute a conservative default based on size/mass
         self.torque_limit = float(torque_limit) if torque_limit is not None else self._compute_default_torque_limit(self.total_mass_kg, self.leg_link_length_m)
-        self.target_velocity = float(target_velocity)
         self.ctrl_cost_weight = float(ctrl_cost_weight)
         self.contact_cost_weight = float(contact_cost_weight)
-        self.straight_cost_weight = float(straight_cost_weight)
         self.alive_bonus = float(alive_bonus)
         self.max_steps = int(max_steps)
 
@@ -126,21 +122,6 @@ class BioloidAntLikeEnv(gym.Env):
         p.setTimeStep(self.time_step, physicsClientId=self.client_id)
 
         self.plane_id = p.loadURDF("plane.urdf", physicsClientId=self.client_id)
-        
-        # --- Visual Customization ---
-        if self.render_mode == "GUI":
-             # Move camera closer to origin
-            p.resetDebugVisualizerCamera(
-                cameraDistance=1.5, 
-                cameraYaw=50, 
-                cameraPitch=-35, 
-                cameraTargetPosition=[0, 0, 0], 
-                physicsClientId=self.client_id
-            )
-            # Tint the floor (checkerboard) to be dark/blueish
-            p.changeVisualShape(self.plane_id, -1, rgbaColor=[0.2, 0.2, 0.6, 1.0], physicsClientId=self.client_id)
-            # Optional: Make background darker (this is global but often helpful)
-            # p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0, physicsClientId=self.client_id) # Hides menus if desired
 
         # Spawn robot at nominal body height
         start_pos = [0.0, 0.0, float(self.body_height_m)]
@@ -234,26 +215,17 @@ class BioloidAntLikeEnv(gym.Env):
         obs = self._get_obs()
 
         # Reward terms
-        lin_vel, ang_vel = p.getBaseVelocity(self.robot_id, physicsClientId=self.client_id)
-        vx, vy, _ = lin_vel
-        wz = ang_vel[2] # Yaw angular velocity
-
-        # 1. Target Velocity Reward (replaces simple forward_reward)
-        # We use an exponential reward to be close to the target velocity.
-        # This is high when vx is near target_velocity, and drops off otherwise.
+        base_pos, _ = p.getBasePositionAndOrientation(self.robot_id, physicsClientId=self.client_id)
+        base_x = float(base_pos[0])
         dt = self.time_step * self.frame_skip
-        forward_vel = vx
-        vel_error = abs(forward_vel - self.target_velocity)
-        forward_reward = np.exp(-2.0 * vel_error) # Scaler '2.0' can be tuned
+        forward_progress = (base_x - self.prev_base_x) / max(dt, 1e-8)
+        self.prev_base_x = base_x
 
-        # 2. Control and Contact Costs
-        ctrl_cost = self.ctrl_cost_weight * np.sum(np.square(action))
+        forward_reward = forward_progress
+        ctrl_cost = self.ctrl_cost_weight * float(np.sum(np.square(action)))
         contact_cost = self.contact_cost_weight * self._sum_contact_forces()
 
-        # 3. Straightness Cost (new)
-        straight_cost = self.straight_cost_weight * (abs(vy) + abs(wz))
-
-        reward = forward_reward + self.alive_bonus - ctrl_cost - contact_cost - straight_cost
+        reward = forward_reward + self.alive_bonus - ctrl_cost - contact_cost
 
         self.step_count += 1
         terminated = self._is_terminated()
@@ -264,7 +236,6 @@ class BioloidAntLikeEnv(gym.Env):
             "alive_bonus": self.alive_bonus,
             "ctrl_cost": ctrl_cost,
             "contact_cost": contact_cost,
-            "straight_cost": straight_cost,
         }
         return obs, float(reward), bool(terminated), bool(truncated), info
 
