@@ -13,10 +13,10 @@ This repository implements a high-performance **Hierarchical Reinforcement Learn
 Check out the trained hierarchical navigation policies running autonomously in both simulators:
 
 ### 1. PyBullet Simulation Demo
-![PyBullet Simulation Demo](Bioloid_Quadruped_Controlled.mp4)
+<video src="Bioloid_Quadruped_Controlled.mp4" width="600" controls autoplay loop muted></video>
 
 ### 2. MuJoCo Simulation Demo
-![MuJoCo Simulation Demo](Bioloid_Quadruped_Controlled_Mujoco.mp4)
+<video src="Bioloid_Quadruped_Controlled_Mujoco.mp4" width="600" controls autoplay loop muted></video>
 
 ---
 
