@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.venv
+venv/
+ENV/
+env/
+
+# PyTorch & Model Weights
+*.pth
+*.pt
+*.ckpt
+*.zip
+*.tar
+*.gz
+*.tgz
+
+# Project Specific Directories
+runs/
+bioloid_checkpoints/
+*_checkpoints/
+checkpoints*/
+checkpoints_*
+*checkpoints*
+output/
+
+# Reference PDFs & Large Documents
+*.pdf
+Amrita_references.txt
+
+# Exclude Entire LaTeX/Journal Paper Directory (keeping only code and environments)
+journal_paper/
+
+# Large Image Files
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+
+# Exclude PPO Code & Obsolete Scripts (as requested)
+brains/ppo/
+training/mujoco/ppo/
+training/pybullet/ppo/
+scripts/truncate_events.py
+scripts/inspect_learning_curve.py
+scripts/extract_convergence_stats.py
+
+# IDEs and System Files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+

@@ -1,0 +1,106 @@
+<mujoco model="Bioloid_Quadruped_Model">
+    <compiler angle="radian" />
+    <option timestep="0.004166666666666667" iterations="50" tolerance="1e-10" />
+    
+    <asset>
+        <mesh name="base_link" file="meshes/base_link.stl" scale="0.001 0.001 0.001" />
+        <mesh name="FR_Hip" file="meshes/FR_Hip.stl" scale="0.001 0.001 0.001" />
+        <mesh name="FL_Hip" file="meshes/FL_Hip.stl" scale="0.001 0.001 0.001" />
+        <mesh name="BR_Hip" file="meshes/BR_Hip.stl" scale="0.001 0.001 0.001" />
+        <mesh name="BL_Hip" file="meshes/BL_Hip.stl" scale="0.001 0.001 0.001" />
+        <mesh name="FR_Leg" file="meshes/FR_Leg.stl" scale="0.001 0.001 0.001" />
+        <mesh name="FL_Leg" file="meshes/FL_Leg.stl" scale="0.001 0.001 0.001" />
+        <mesh name="BR_Leg" file="meshes/BR_Leg.stl" scale="0.001 0.001 0.001" />
+        <mesh name="BL_Leg" file="meshes/BL_Leg.stl" scale="0.001 0.001 0.001" />
+    </asset>
+
+    <worldbody>
+        <light directional="true" pos="-0.5 0.5 3" dir="0 0 -1" />
+        <geom name="floor" pos="0 0 0" size="10 10 0.1" type="plane" rgba="1 0.83 0.61 0.5" friction="0.5 0.005 0.0001" />
+
+        <body name="base_link" pos="0.0 0.0 0.2" euler="0.0 0.0 0.0">
+            <freejoint name="root_joint"/>
+            <geom name="base_link_geom" type="mesh" mesh="base_link" />
+            <inertial mass="0.394557" pos="0 -0.0006 -0.021" fullinertia="0.0008 0.0004 0.0011 0 0 0" />
+            
+            <body name="FR_Hip" pos="0.0465 -0.052 -0.001" euler="0 0 3.14159">
+                <joint name="base_link_FR_Hip_Joint" type="hinge" axis="0 0 -1" range="-1.570796 0.872665" limited="true" damping="0.05" armature="0.005" />
+                <geom name="FR_Hip_geom" type="mesh" mesh="FR_Hip" />
+                <inertial mass="0.0425" pos="-0.018 0.018 -0.022" fullinertia="1.8e-05 1.8e-05 1.8e-05 0 0 0" />
+                <body name="FR_Leg" pos="-0.049 0.019 -0.035" euler="1.57 -0.785 -1.57">
+                    <joint name="FR_Hip_FR_Leg_Joint" type="hinge" axis="0 0 -1" range="0.0 1.570796" limited="true" damping="0.05" armature="0.005" />
+                    <geom name="FR_Leg_geom" type="mesh" mesh="FR_Leg" />
+                    <inertial mass="0.072" pos="0.021 0.0 0.0" fullinertia="1.2e-05 3.9e-05 3.6e-05 0 0 0" />
+                </body>
+            </body>
+
+            <body name="FL_Hip" pos="0.0465 0.052 -0.001" euler="0 0 -3.08">
+                <joint name="base_link_FL_Hip_Joint" type="hinge" axis="0 0 -1" range="-0.872665 1.570796" limited="true" damping="0.05" armature="0.005" />
+                <geom name="FL_Hip_geom" type="mesh" mesh="FL_Hip" />
+                <inertial mass="0.0425" pos="-0.018 -0.018 -0.022" fullinertia="1.8e-05 1.8e-05 1.8e-05 0 0 0" />
+                <body name="FL_Leg" pos="-0.049 -0.019 -0.035" euler="-1.57 -0.785 1.57">
+                    <joint name="FL_Hip_FL_Leg_Joint" type="hinge" axis="0 0 -1" range="-1.570796 0.0" limited="true" damping="0.05" armature="0.005" />
+                    <geom name="FL_Leg_geom" type="mesh" mesh="FL_Leg" />
+                    <inertial mass="0.072" pos="0.021 0.0 0.0" fullinertia="1.2e-05 3.9e-05 3.6e-05 0 0 0" />
+                </body>
+            </body>
+
+            <body name="BR_Hip" pos="-0.0465 -0.052 -0.001" euler="0 0 0">
+                <joint name="base_link_BR_Hip_Joint" type="hinge" axis="0 0 -1" range="-0.872665 1.570796" limited="true" damping="0.05" armature="0.005" />
+                <geom name="BR_Hip_geom" type="mesh" mesh="BR_Hip" />
+                <inertial mass="0.0425" pos="-0.018 -0.018 -0.022" fullinertia="1.8e-05 1.8e-05 1.8e-05 0 0 0" />
+                <body name="BR_Leg" pos="-0.049 -0.019 -0.035" euler="-1.57 -0.785 1.57">
+                    <joint name="BR_Hip_BR_Leg_Joint" type="hinge" axis="0 0 -1" range="-1.570796 0.0" limited="true" damping="0.05" armature="0.005" />
+                    <geom name="BR_Leg_geom" type="mesh" mesh="BR_Leg" />
+                    <inertial mass="0.072" pos="0.021 0.0 0.0" fullinertia="1.2e-05 3.9e-05 3.6e-05 0 0 0" />
+                </body>
+            </body>
+
+            <body name="BL_Hip" pos="-0.0465 0.052 -0.001" euler="0 0 0">
+                <joint name="base_link_BL_Hip_Joint" type="hinge" axis="0 0 -1" range="-1.570796 0.872665" limited="true" damping="0.05" armature="0.005" />
+                <geom name="BL_Hip_geom" type="mesh" mesh="BL_Hip" />
+                <inertial mass="0.0425" pos="-0.018 0.018 -0.022" fullinertia="1.8e-05 1.8e-05 1.8e-05 0 0 0" />
+                <body name="BL_Leg" pos="-0.019 0.049 -0.035" euler="-1.57 0.785 1.57">
+                    <joint name="BL_Hip_BL_Leg_Joint" type="hinge" axis="0 0 -1" range="-1.570796 0.0" limited="true" damping="0.05" armature="0.005" />
+                    <geom name="BL_Leg_geom" type="mesh" mesh="BL_Leg" />
+                    <inertial mass="0.072" pos="0.021 0.0 0.0" fullinertia="1.2e-05 3.9e-05 3.6e-05 0 0 0" />
+                </body>
+            </body>
+        </body>
+    <body name="marker_0" pos="1.5 1.5 0.1" mocap="true">
+  <geom type="sphere" size="0.12" rgba="0.2 0.8 0.2 0.4" contype="0" conaffinity="0"/>
+</body>
+<body name="marker_1" pos="3.0 0.0 0.1" mocap="true">
+  <geom type="sphere" size="0.12" rgba="0.2 0.8 0.2 0.4" contype="0" conaffinity="0"/>
+</body>
+<body name="marker_2" pos="1.5 -1.5 0.1" mocap="true">
+  <geom type="sphere" size="0.12" rgba="0.2 0.8 0.2 0.4" contype="0" conaffinity="0"/>
+</body>
+<body name="marker_3" pos="0.0 0.0 0.1" mocap="true">
+  <geom type="sphere" size="0.12" rgba="1.0 0.2 0.2 0.5" contype="0" conaffinity="0"/>
+</body>
+</worldbody>
+
+    <contact>
+        <!-- Disables all self-collisions between the specified bodies -->
+        <exclude body1="base_link" body2="FR_Hip"/>
+        <exclude body1="base_link" body2="FL_Hip"/>
+        <exclude body1="base_link" body2="BR_Hip"/>
+        <exclude body1="base_link" body2="BL_Hip"/>
+        <exclude body1="FR_Hip" body2="FR_Leg"/>
+        <exclude body1="FL_Hip" body2="FL_Leg"/>
+        <exclude body1="BR_Hip" body2="BR_Leg"/>
+        <exclude body1="BL_Hip" body2="BL_Leg"/>
+    </contact>
+
+    <actuator>
+        <motor name="fr_hip" joint="base_link_FR_Hip_Joint" gear="2.5"/>
+        <motor name="fl_hip" joint="base_link_FL_Hip_Joint" gear="2.5"/>
+        <motor name="br_hip" joint="base_link_BR_Hip_Joint" gear="2.5"/>
+        <motor name="bl_hip" joint="base_link_BL_Hip_Joint" gear="2.5"/>
+        <motor name="fr_leg" joint="FR_Hip_FR_Leg_Joint" gear="2.5"/>
+        <motor name="fl_leg" joint="FL_Hip_FL_Leg_Joint" gear="2.5"/>
+        <motor name="br_leg" joint="BR_Hip_BR_Leg_Joint" gear="2.5"/>
+        <motor name="bl_leg" joint="BL_Hip_BL_Leg_Joint" gear="2.5"/>
+    </actuator>
+</mujoco>
