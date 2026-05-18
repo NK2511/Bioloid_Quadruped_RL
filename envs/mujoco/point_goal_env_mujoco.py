@@ -111,7 +111,7 @@ class BioloidMujocoEnvPointGoal(gym.Env):
         xml_path: str = os.path.join("assets", "mujoco", "Bioloid_Quadruped_Model", "Bioloid_Quadruped_Model.xml"),
         render_mode: str = None,
         max_steps: int = 1000,
-        walker_path: str = os.path.join("models", "mujoco", "sac", "Walker.pth"),
+        walker_path: str = os.path.join("models", "mujoco", "sac", "Straight_Walker.pth"),
         turn_left_path: str = os.path.join("models", "mujoco", "sac", "Left_Turner.pth"),
         turn_right_path: str = os.path.join("models", "mujoco", "sac", "Right_Turner.pth"),
         command_duration_steps: int = 30,

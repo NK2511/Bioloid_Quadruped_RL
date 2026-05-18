@@ -13,16 +13,10 @@ This repository implements a high-performance **Hierarchical Reinforcement Learn
 Check out the trained hierarchical navigation policies running autonomously in both simulators:
 
 ### 1. PyBullet Simulation Demo
-<div align="center">
-  <video src="Bioloid_Quadruped_Controlled.mp4" width="80%" controls autoplay loop muted></video>
-  <p><i>The robot autonomously switches between walking and turning to navigate waypoints.</i></p>
-</div>
+![PyBullet Simulation Demo](Bioloid_Quadruped_Controlled.mp4)
 
 ### 2. MuJoCo Simulation Demo
-<div align="center">
-  <video src="Bioloid_Quadruped_Controlled_Mujoco.mp4" width="80%" controls autoplay loop muted></video>
-  <p><i>Emergent trot-like gaits running at 240Hz under MuJoCo's smooth physics engine.</i></p>
-</div>
+![MuJoCo Simulation Demo](Bioloid_Quadruped_Controlled_Mujoco.mp4)
 
 ---
 
