@@ -1,76 +1,125 @@
-# Quadruped Reinforcement Learning
+# Bioloid Quadruped Reinforcement Learning (HRL)
 
-This repository implements a **Hierarchical Reinforcement Learning (HRL)** framework for a Bioloid quadruped robot using PyBullet and PyTorch. It is designed to demonstrate how low-level motor skills can be composed to achieve complex high-level navigation tasks.
+This repository implements a high-performance **Hierarchical Reinforcement Learning (HRL)** framework for a Bioloid 8-DoF quadruped robot. The project now fully supports both the **PyBullet** and **MuJoCo** physics simulators, using highly optimized **Soft Actor-Critic (SAC)** policies to achieve stable locomotion primitives and goal-directed path navigation.
 
-## System Overview
+<div align="center">
+  <img src="Bioloid_Quadruped.png" alt="Bioloid Quadruped Robot" width="60%" />
+</div>
 
-The framework consists of two main levels:
+---
+
+## 📺 Demonstration Demos
+
+Check out the trained hierarchical navigation policies running autonomously in both simulators:
+
+### 1. PyBullet Simulation Demo
+<div align="center">
+  <video src="Bioloid_Quadruped_Controlled.mp4" width="80%" controls autoplay loop muted></video>
+  <p><i>The robot autonomously switches between walking and turning to navigate waypoints.</i></p>
+</div>
+
+### 2. MuJoCo Simulation Demo
+<div align="center">
+  <video src="Bioloid_Quadruped_Controlled_Mujoco.mp4" width="80%" controls autoplay loop muted></video>
+  <p><i>Emergent trot-like gaits running at 240Hz under MuJoCo's smooth physics engine.</i></p>
+</div>
+
+---
+
+## ⚙️ System Architecture
+
+The pipeline divides the complex control problem into two distinct abstraction layers:
 
 1.  **Low-Level Skills (The "Body")**:
-    -   Specialized Soft Actor-Critic (SAC) agents trained for specific primitive actions:
-        -   **Walking Forward**: Moves the robot straight ahead.
-        -   **Turning Left/Right**: Rotates the robot in place.
-    -   These agents accept the robot's proprioceptive state (joint angles, velocities, orientation) and output direct joint torques.
+    *   Continuous **Soft Actor-Critic (SAC)** experts trained to mastery for individual motor primitives:
+        *   **Walker (Forward Walking)**: Emerges a stable, high-speed 2Hz trot gait.
+        *   **Turn Left / Turn Right**: Rotates the robot in-place.
+    *   Accepts 28-dimensional proprioceptive states (joint positions/velocities, orientation, height, and touch sensors) and outputs joint torques.
+2.  **High-Level Navigator (The "Brain")**:
+    *   A **Discrete SAC** policy wrapping the expert motor skills.
+    *   It observes the relative target waypoint (distance & angle) and decides *which* low-level behavior to execute (`WALK`, `TURN_LEFT`, `TURN_RIGHT`, `STOP`) every 0.5 seconds.
+    *   This hierarchical structure improves sample efficiency by over 100x compared to standard monolithic learning.
 
-2.  **High-Level Planner (The "Brain")**:
-    -   A "Point-Goal" navigation agent that decides *which* skill to execute.
-    -   It observes the distance and angle to a target waypoint and selects a discrete command (`WALK`, `TURN_LEFT`, `TURN_RIGHT`, `STOP`) every ~0.5 seconds.
-    -   This hierarchical approach simplifies long-horizon navigation by abstracting complex motor control into reusable behaviors.
+---
 
-## Project Structure
+## 📂 Project Structure
 
--   `envs/`: Custom Gymnasium environments for the quadruped.
-    -   `quadruped_env.py`: Base physics environment (8-DoF).
-    -   `point_goal_env.py`: Hierarchical navigation environment.
-    -   `turn_*.py`: Specialized training environments for turning skills.
--   `models/`: Pre-trained model checkpoints.
--   `scripts/`: Training scripts for individual skills and the navigator.
--   `sac/`: Soft Actor-Critic (SAC) implementation.
--   `assets/`: Robot URDF and mesh files.
--   `evaluate_point_goal.py`: Script to evaluate the full navigation stack.
--   `teleop.py`: Interactive keyboard control script.
+```
+├── assets/                  # 3D robot models (URDFs for PyBullet, MJCF XML for MuJoCo, and STL meshes)
+├── brains/                  # Policy architectures
+│   └── sac/                 # Continuous & Discrete SAC agent implementations
+├── envs/                    # Custom Gym environments
+│   ├── pybullet/            # Base environments and Navigator wrapper for PyBullet
+│   └── mujoco/              # Base environments and Navigator wrapper for MuJoCo
+├── models/                  # Pre-trained policy checkpoints (Walker, Turners, and Point-Goal Navigator)
+│   ├── pybullet/
+│   └── mujoco/
+├── scripts/                 # Human interaction and evaluation scripts
+│   ├── teleop.py            # PyBullet keyboard control
+│   ├── teleop_mujoco.py     # MuJoCo keyboard control
+│   ├── evaluate_point_goal.py        # PyBullet hierarchical path evaluator
+│   └── evaluate_point_goal_mujoco.py # MuJoCo hierarchical path evaluator
+└── training/                # From-scratch training pipelines
+    ├── pybullet/sac/        # PyBullet walker, turns, and goal navigation SAC pipelines
+    └── mujoco/sac/          # MuJoCo walker, turns, and goal navigation SAC pipelines
+```
 
-## Installation
+---
 
-1.  Clone the repository.
-2.  Install dependencies:
+## 🚀 Quick Start
+
+### 1. Installation
+Ensure you have Python 3.8+ installed, then clone this repository and install the dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+### 2. PyBullet Simulation Execution
+*   **Hierarchical Navigation (Autonomous):**
     ```bash
-    pip install -r requirements.txt
+    python scripts/evaluate_point_goal.py
     ```
+*   **Manual Keyboard Teleoperation:**
+    ```bash
+    python scripts/teleop.py
+    ```
+    *(Click the PyBullet GUI window to focus inputs. **UP Arrow**: Walk | **LEFT/RIGHT**: Turn | **R**: Reset)*
 
-## Usage
+### 3. MuJoCo Simulation Execution
+*   **Hierarchical Navigation (Autonomous):**
+    ```bash
+    python scripts/evaluate_point_goal_mujoco.py
+    ```
+*   **Manual Keyboard Teleoperation:**
+    ```bash
+    python scripts/teleop_mujoco.py
+    ```
+    *(A passive MuJoCo viewer will launch. Use **UP Arrow**: Walk | **LEFT/RIGHT**: Turn | **R**: Reset)*
 
-### Evaluation (Navigation)
-To observe the fully trained hierarchical agent navigating a sequence of waypoints:
-```bash
-python evaluate_point_goal.py
-```
-This script spawns the robot and a series of blue waypoints. The robot will autonomously switch between walking and turning to reach each goal.
+---
 
-### Teleoperation (Manual Control)
-You can manually control the robot using your keyboard to test the low-level skills.
-```bash
-python teleop.py
-```
-*(Click on the PyBullet GUI window to ensure it captures your key presses)*
+## 🛠️ Training From Scratch
 
-**Controls:**
--   **UP Arrow**: Walk Forward
--   **LEFT Arrow**: Turn Left
--   **RIGHT Arrow**: Turn Right
--   **'r' Key**: Reset Robot
+If you want to train your own locomotion primitives or navigation policies, execute the desired SAC training pipeline:
+
+### In PyBullet:
+*   Train Walk: `python training/pybullet/sac/train_walker.py`
+*   Train Navigation: `python training/pybullet/sac/train_point_goal.py`
+
+### In MuJoCo:
+*   Train Walk: `python training/mujoco/sac/train_mujoco_walker.py`
+*   Train Navigation: `python training/mujoco/sac/train_mujoco_navigation.py`
+
+---
+
+## ⚠️ Important Operational Notes
 
 > [!IMPORTANT]
-> **Operational Note**: Please ensure stable control inputs for best performance.
-> *   **Do not press multiple direction keys simultaneously** (e.g., Up + Left). The system cannot blend these distinct policies, and conflicting torque commands may cause instability.
-> *   **Avoid rapid, erratic switching** between commands. Sudden changes in policy can destabilize the robot's dynamic balance.
+> **Locomotion Control Principles**:
+> *   **Do not send overlapping command inputs** (e.g., trying to press Up and Left simultaneously during teleoperation). Primitives are distinct networks, and mixing commands directly causes high torque instability.
+> *   **Avoid high-frequency command transitions**. Allow the robot to complete its current step cycle to maintain its dynamic center of mass before switching commands.
 
-### Training
-To train the walker agent from scratch:
-```bash
-python scripts/train_walker.py --gui
-```
-(Other training scripts are available in the `scripts/` directory)
+---
 
-## License
-MIT
+## 📄 License
+This project is licensed under the MIT License.

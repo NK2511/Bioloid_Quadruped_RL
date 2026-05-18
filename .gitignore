@@ -53,4 +53,10 @@ scripts/extract_convergence_stats.py
 .DS_Store
 Thumbs.db
 
+# Whitelist README media files (allow pushing them to repo)
+!Bioloid_Quadruped.png
+!Bioloid_Quadruped_Controlled.mp4
+!Bioloid_Quadruped_Controlled_Mujoco.mp4
+
+
 
